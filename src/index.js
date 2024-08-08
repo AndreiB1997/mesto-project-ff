@@ -1,7 +1,9 @@
-export {cardTemplate, placesList, popupClose, showCard}
+export {cardTemplate};
+
 import '../src/pages/index.css';
-import {insertingСards, createCard, deleteCard, likeCard} from '../src/scripts/cards.js';
-import {openPopup, closePopup} from '../src/scripts/modal.js'
+import {createCard, deleteCard, likeCard} from '../src/scripts/card.js';
+import {openPopup, closePopup} from '../src/scripts/modal.js';
+import {initialCards} from './/scripts/cards.js';
 
 const cardTemplate = document.querySelector('#card-template').content;
 const placesList = document.querySelector('.places__list');
@@ -19,18 +21,11 @@ const profileTitle = document.querySelector('.profile__title'); /* заголо�
 const profileDescription = document.querySelector('.profile__description'); /* описание профиля на странице */
 const newCardForm = document.forms['new-place'];
 
-//вывод всех карточек из массива
+//вставка всех карточек из массива в разметку
 insertingСards();
 
 //слушать кнопку открытия окна редактирования профиля
-profileEditButton.addEventListener('click', copyingDataForPopup);
-
-//функция колбэк копирования заголовка и описания сайта в инпуты попапа
-function copyingDataForPopup() {
-  editProfileForm.elements['name'].value = profileTitle.textContent;
-  editProfileForm.elements['description'].value = profileDescription.textContent;
-  openPopup(popupTypeEdit);
-}
+profileEditButton.addEventListener('click', openEditPopup);
 
 //слушать кнопку открытия окна добавления карточки
 profileAddButton.addEventListener('click', () => openPopup(popupTypeNewCard));
@@ -44,12 +39,25 @@ newCardForm.addEventListener('submit', handleNewCardFormSubmit);
 //добавляем класс всем попапап для анимации
 popups.forEach((popup) => popup.classList.add('popup_is-animated'));
 
-//функция демонстрации большой картинки карточки
-function showCard(link, alt, title) {
-  popupImage.src = link;
-  popupImage.alt = alt;
-  popupCaption.textContent = title;
-  openPopup(popupTypeImage);
+//функция вставки карточек из массива в разметку
+function insertingСards() {
+  const filledCards = initialCards.map((card) => createCard(card.link, card.name, showCard, deleteCard, likeCard));
+  filledCards.forEach((card) => placesList.append(card));
+}
+
+//функция колбэк копирования заголовка и описания сайта в инпуты и открытие попапа редактирования профиля
+function openEditPopup() {
+  editProfileForm.elements['name'].value = profileTitle.textContent;
+  editProfileForm.elements['description'].value = profileDescription.textContent;
+  openPopup(popupTypeEdit);
+}
+
+//функция колбэк для «отправки» формы в окне редактирования профиля
+function handleEditProfileFormSubmit(evt) {
+  evt.preventDefault();
+  profileTitle.textContent = editProfileForm.elements['name'].value;
+  profileDescription.textContent = editProfileForm.elements['description'].value;
+  closePopup(popupTypeEdit);
 }
 
 //функция колбэк для «отправки» формы в окне добавления карточки
@@ -63,11 +71,13 @@ function handleNewCardFormSubmit(evt) {
   closePopup(popupTypeNewCard);
 }
 
-//функция колбэк для «отправки» формы в окне редактирования профиля
-function handleEditProfileFormSubmit(evt) {
-  evt.preventDefault();
-  profileTitle.textContent = editProfileForm.elements['name'].value;
-  profileDescription.textContent = editProfileForm.elements['description'].value;
-  closePopup(popupTypeEdit);
+//функция наполнения и открытия попапа большой картинки карточки
+function showCard(link, alt, title) {
+  popupImage.src = link;
+  popupImage.alt = alt;
+  popupCaption.textContent = title;
+  openPopup(popupTypeImage);
 }
 
+popupClose.forEach((buttonClose) =>
+  buttonClose.addEventListener('click', () => closePopup(document.querySelector('.popup_is-opened'))));

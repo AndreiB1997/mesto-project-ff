@@ -24,8 +24,18 @@ module.exports = {
         exclude: '/node_modules/'
       },
       {
-        test: /\.(png|svg|jpg|gif|woff(2)?|eot|ttf|otf)$/, /* регулярное выражение, которое ищет все файлы с такими расширениями */
-        type: 'asset/resource'
+        test: /\.(png|svg|jpg|jpeg|gif)$/i, /* регулярное выражение, которое ищет все файлы с такими расширениями */
+        type: 'asset/resource',
+        generator: {
+            filename: 'images/[name].[hash][ext]',
+      }
+      },
+      {
+        test: /\.(woff(2)?|eot|ttf|otf)$/i,
+        type: 'asset/resource',
+        generator: {
+            filename: 'fonts/[name].[hash][ext]',
+        }
       },
       {
         test: /\.css$/, /* применять это правило только к CSS-файлам */
@@ -47,3 +57,4 @@ module.exports = {
     new MiniCssExtractPlugin()
   ] 
 }; 
+
