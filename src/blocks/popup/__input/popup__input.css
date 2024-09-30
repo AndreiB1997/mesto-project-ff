@@ -7,11 +7,31 @@
   line-height: 18px;
   box-sizing: border-box;
   padding: 10px 0 0;
-  margin-bottom: 10px;
 }
 
 .popup__input:last-of-type {
   margin-bottom: 0;
+}
+
+.form__input_type_error {
+  border-bottom: 1px solid rgba(255, 0, 0, 1); /* ПР7 */
+}
+
+.form__input_error-message {/* span с текстом ошибки при invalid в input в редактировать профиль ПР7*/
+    font-family: Inter, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 14.52px;
+    min-height: 30px;
+    text-align: left;
+    display: block;
+    padding-top: 5px;
+    visibility: hidden;
+    color: rgba(255, 0, 0, 1);
+}
+
+.form__input_error-message_active {
+  visibility: visible;
 }
 
 @media screen and (max-width: 568px) {
